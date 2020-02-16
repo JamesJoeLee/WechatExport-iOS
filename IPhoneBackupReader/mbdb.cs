@@ -295,25 +295,25 @@ namespace mbdbdump
     {
         public string key;              // filename in the backup directory: SHA.1 of Domain + "-" + Path
 
-        public string Domain;
+        public string Domain;           //英文解释域
         public string Path;
-        public string LinkTarget;
-        public string DataHash;         // SHA.1 for 'important' files
+        public string LinkTarget;//链接目标
+        public string DataHash;   //数据哈希      // SHA.1 for 'important' files
         public string alwaysNull;
 
         public string data;             // the 40-byte block (some fields still need to be explained)
 
         public ushort Mode;             // 4xxx=dir, 8xxx=file, Axxx=symlink
         public int alwaysZero;
-        public uint inode;              // without any doubt
+        public uint inode;              // 毫无疑问  索引节点
         public uint UserId;             // 501/501 for apps
         public uint GroupId;
-        public DateTime aTime;          // aTime or bTime is the former ModificationTime
+        public DateTime aTime;          // aTime or bTime is the former ModificationTime   aTime或bTime是前一个修改时间
         public DateTime bTime;
         public DateTime cTime;
-        public long FileLength;         // always 0 for link or directory
-        public byte flag;               // 0 for link, 4 for directory, otherwise values unknown (4 3 1)
-        public byte PropertyCount;
+        public long FileLength;         // always 0 for link or directory   对于链接或目录总是0
+        public byte flag;               // 0 for link, 4 for directory, otherwise values unknown (4 3 1)     0表示链接，4表示目录，否则为未知值(4 3 1)
+        public byte PropertyCount;     //直译  财产数
 
         public struct Property
         {

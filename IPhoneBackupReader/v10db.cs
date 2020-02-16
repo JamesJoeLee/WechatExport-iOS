@@ -8,6 +8,11 @@ namespace WechatExport
 {
     public static class V10db
     {
+
+        //BackupDB参数是Manifest.db的地址
+        //C:\Users\86233\AppData\Roaming\Apple Computer\MobileSync\Backup\00008020-000D083034BB002E\Manifest.db
+        //Domain:    com.tencent.xin  这个可能是跟微信相关的一个文件不知道是什么
+        //Domain:英文解释域
         public static List<MBFileRecord> ReadMBDB(string BackupDB, string Domain)
         {
             try

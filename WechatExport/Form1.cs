@@ -26,6 +26,7 @@ namespace WechatExport
             comboBox1.Items.Clear();
             string s = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             s = MyPath.Combine(s, "Apple Computer", "MobileSync", "Backup");
+            s = @"E:\自定义资源\Backup\";
             try
             {
                 DirectoryInfo d = new DirectoryInfo(s);
@@ -83,19 +84,26 @@ namespace WechatExport
 
         private void LoadCurrentBackup()
         {
+            //MessageBox.Show(comboBox1.SelectedItem.GetType().ToString());
+            //的确 后缀是iphonebackup
             if (comboBox1.SelectedItem.GetType() != typeof(IPhoneBackup))
                 return;
-            var backup = (IPhoneBackup)comboBox1.SelectedItem;
+            var backup = (IPhoneBackup)comboBox1.SelectedItem;//back此时代表我的备份
 
             files92 = null;
             try
             {
+                // File.Exists()  判断文件是否存在
+                //Manifest.mbdb文件中存储与备份文件关联的文件名列表
+                //我的备份中没有Manifest.mbdb   但有Manifest.db
                 if (File.Exists(Path.Combine(backup.path, "Manifest.mbdb")))
                 {
                     files92 = mbdbdump.mbdb.ReadMBDB(backup.path, "com.tencent.xin");
                 }
                 else if (File.Exists(Path.Combine(backup.path, "Manifest.db")))
                 {
+                    //string Combine(params string[] paths)  将字符串数组组合成一个路径
+                    //com.tencent.xin  这个可能是跟微信相关的一个文件不知道是什么
                     files92 = V10db.ReadMBDB(Path.Combine(backup.path, "Manifest.db"), "com.tencent.xin");
                 }
                 if (files92 != null && files92.Count > 0)
@@ -198,9 +206,11 @@ namespace WechatExport
 
         void Run()
         {
-            var saveBase = textBox1.Text;
-            Directory.CreateDirectory(saveBase);
+            var saveBase = textBox1.Text;//读取文本框中的保存地址
+            Directory.CreateDirectory(saveBase);//创建这个文件夹 该函数为创建多级文件夹
             AddLog("分析文件夹结构");
+            //((IPhoneBackup)comboBox1.SelectedItem).path  找到苹果备份的文件夹的绝对路径
+
             wechat = new WeChatInterface(((IPhoneBackup)comboBox1.SelectedItem).path, files92);
             wechat.BuildFilesDictionary();
             AddLog("查找UID");
@@ -217,12 +227,12 @@ namespace WechatExport
                 var userSaveBase = Path.Combine(saveBase, myself.ID());
                 Directory.CreateDirectory(userSaveBase);
                 AddLog("正在打开数据库");
-                if (!wechat.OpenMMSqlite(userBase, out SQLiteConnection conn))
+                if (!wechat.OpenMMSqlite(userBase, out SQLiteConnection conn))//conn
                 {
                     AddLog("打开MM.sqlite失败，跳过");
                     continue;
                 }
-                if (wechat.OpenWCDBContact(userBase, out SQLiteConnection wcdb))
+                if (wechat.OpenWCDBContact(userBase, out SQLiteConnection wcdb))//wcdb
                     AddLog("存在WCDB，与旧版好友列表合并使用");
                 AddLog("读取好友列表");
                 if (!wechat.GetFriendsDict(conn, wcdb, myself, out Dictionary<string, Friend> friends, out int friendcount))

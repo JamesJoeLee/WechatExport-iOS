@@ -14,7 +14,7 @@ namespace WechatExport
     class WeChatInterface
     {
         public Dictionary<string, string> fileDict = null;
-        private string currentBackup;
+        private string currentBackup;//英文解释当前的备份
         private List<MBFileRecord> files92;
         public WeChatInterface(string currentBackup, List<MBFileRecord> files92)
         {
